@@ -4,9 +4,9 @@ from pygame.locals import *
 import random as r
 pygame.init()
 
-#Shoot's settings
-shoot_sound = pygame.mixer.Sound(r"C:\Users\home\Desktop\Victor\UFSC\Pygame teste\Data\Áudios\Spells\Shoot_sound\shot converter.mp3")
-shoot_sound.set_volume(1.0)
+###Shoot's settings
+##shoot_sound = pygame.mixer.Sound(r"C:\Users\home\Desktop\Victor\UFSC\Pygame teste\Data\Áudios\Spells\Shoot_sound\shot converter.mp3")
+##shoot_sound.set_volume(1.0)
 
 class Aim(pygame.sprite.Sprite):
     def __init__(self, *groups):
@@ -23,18 +23,6 @@ class Aim(pygame.sprite.Sprite):
                 self.rect.x = mouse_coordenates[0]
                 self.rect.y = mouse_coordenates[1]
                 
-class Bullet(pygame.sprite.Sprite):
-     def __init__(self, *groups):
-        super().__init__(*groups)
-        elf.image = pygame.image.load(r"C:\Users\home\Desktop\Victor\UFSC\Projeto_Semestral_Introducao_Informatica\Data\Imagens\fireball.png")
-        self.rect = pygame.Rect(0, 0, 23, 17)
-        self.image = pygame.transform.scale(self.image, (50, 50))
-
-##    def update(self, *args):
-##        pass
-                
-
-
 class Zombie(pygame.sprite.Sprite):
     def __init__(self, *groups):
         super().__init__(*groups)
@@ -47,10 +35,10 @@ class Zombie(pygame.sprite.Sprite):
 
         self.health = 10
         
-        self.timer = 0
-    def update(self, *arg):
-        self.timer += 0.1
-        self.rect.x = 10 + m.sin(self.timer) * 100
+##        self.timer = 0
+##    def update(self, *arg):
+##        self.timer += 0.1
+##        self.rect.x = 10 + m.sin(self.timer) * 100
 
         if self.health <= 0:
             self.kill()
@@ -99,7 +87,15 @@ class Knight(pygame.sprite.Sprite):
         if self.rect.left < 0:
             self.rect.left = 0
 
-     
+class Bullet(pygame.sprite.Sprite):
+     def __init__(self, *groups):
+        super().__init__(*groups)
+        self.image = pygame.image.load(r"C:\Users\home\Desktop\Victor\UFSC\Projeto_Semestral_Introducao_Informatica\Data\Imagens\fireball.png")
+        self.rect = pygame.Rect(200, 200, 23, 17)
+        self.image = pygame.transform.scale(self.image, (50, 50))
+        
+        #OBS: o comando MOUSEDOWN para disparar deve ser programado no arquivo main, mas as coordenadas da Bullet serão programadas dentro da classe
+
 class Background(pygame.sprite.Sprite):
     def __init__(self, *groups):
         super().__init__(*groups)
