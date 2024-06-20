@@ -36,7 +36,7 @@ bulletGroup = pygame.sprite.Group()
                 
 #Sound's settings:
 #Background Sound:
-pygame.mixer.music.load(r"C:\Users\home\Desktop\Victor\UFSC\Pygame teste\Data\Áudios\Cyberpunk Moonlight Sonata.mp3")
+pygame.mixer.music.load(r"Data/Áudios/Cyberpunk Moonlight Sonata.mp3")
 pygame.mixer.music.play(-1)
 
 #Background's image:
@@ -95,8 +95,10 @@ while True:
 
 
         #End game Cases:
-        aim.update()
-        drawGroup.draw(tela) 
+        #aim.update()
+        drawGroup.update()
+        drawGroup.draw(tela)
+
         if knight.health <= 0: #TELA DE GAME OVER
             tela.blit(texto_formatado_game_over, (200, 200))
             print("A vida é <= 0")
@@ -105,7 +107,7 @@ while True:
         #Status do knight:
         tela.blit(texto_formatado_health, (0, 0)) # Desenha o texto de vida do Knight
     
-        drawGroup.update()
+
         
     pygame.display.update()
 

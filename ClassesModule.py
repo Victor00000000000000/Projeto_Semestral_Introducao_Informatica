@@ -11,24 +11,24 @@ pygame.init()
 class Aim(pygame.sprite.Sprite):
     def __init__(self, *groups):
         super().__init__(*groups)
-        self.image = pygame.image.load(r"C:\Users\home\Desktop\Victor\UFSC\Projeto_Semestral_Introducao_Informatica\Data\Imagens\aim.png")
+        self.image = pygame.image.load(r"Data\Imagens\aim.png")
         self.rect = pygame.Rect(300, 300, 1, 1)
         self.image = pygame.transform.scale(self.image, (50, 50))
 
     def update(self, *args):
-        for event in pygame.event.get():
-            if event.type == MOUSEMOTION:
-##              print("Mouse Moving")
+        #for event in pygame.event.get():
+        #    if event.type == MOUSEMOTION:
+                print("Mouse Moving")
                 mouse_coordenates = pygame.mouse.get_pos()
-##                self.rect.x = mouse_coordenates[0]
-##                self.rect.y = mouse_coordenates[1]
-                if event.rel[0] > 0:
-                    self.rect.x = mouse_coordenates[0]
+                self.rect.x = mouse_coordenates[0]
+                self.rect.y = mouse_coordenates[1]
+                # if event.rel[0] > 0:
+                #     self.rect.x = mouse_coordenates[0]
                 
 class Zombie(pygame.sprite.Sprite):
     def __init__(self, *groups):
         super().__init__(*groups)
-        self.image = pygame.image.load(r"C:\Users\home\Desktop\Victor\UFSC\Projeto_Semestral_Introducao_Informatica\Data\Imagens\zombiePixel.png")
+        self.image = pygame.image.load(r"Data\Imagens\zombiePixel.png")
         self.rect = pygame.Rect(100, 100, 25, 40)
         self.image = pygame.transform.scale(self.image, (50,50))
 
@@ -49,7 +49,7 @@ class Zombie(pygame.sprite.Sprite):
 class Knight(pygame.sprite.Sprite):
     def __init__(self, *groups):
         super().__init__(*groups)
-        self.image = pygame.image.load(r"C:\Users\home\Desktop\Victor\UFSC\Projeto_Semestral_Introducao_Informatica\Data\Imagens\knight.png")
+        self.image = pygame.image.load(r"Data\Imagens\knight.png")
         self.rect = pygame.Rect(300, 300, 20, 40)
         self.image = pygame.transform.scale(self.image, (75,75))
         self.rect.center = (self.rect.x/2, self.rect.y/2)
@@ -92,7 +92,7 @@ class Knight(pygame.sprite.Sprite):
 class Bullet(pygame.sprite.Sprite):
      def __init__(self, *groups):
         super().__init__(*groups)
-        self.image = pygame.image.load(r"C:\Users\home\Desktop\Victor\UFSC\Projeto_Semestral_Introducao_Informatica\Data\Imagens\fireball.png")
+        self.image = pygame.image.load(r"Data\Imagens\fireball.png")
         self.rect = pygame.Rect(200, 200, 23, 17)
         self.image = pygame.transform.scale(self.image, (50, 50))
         
@@ -101,6 +101,6 @@ class Bullet(pygame.sprite.Sprite):
 class Background(pygame.sprite.Sprite):
     def __init__(self, *groups):
         super().__init__(*groups)
-        self.image = pygame.image.load(r"C:\Users\home\Desktop\Victor\UFSC\Projeto_Semestral_Introducao_Informatica\Data\Imagens\Background.png")
+        self.image = pygame.image.load(r"Data\Imagens\Background.png")
         self.rect = pygame.Rect(0, 0, 640, 480)
         self.image = pygame.transform.scale(self.image, (640, 480))
