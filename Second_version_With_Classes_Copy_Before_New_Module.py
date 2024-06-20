@@ -86,7 +86,7 @@ while True:
         if collision_knight_zombies:
             knight.health -= 5
 
-        collision_zombies_bullet = pygame.sprite.groupcollide(zombieGroup, bulletGroup, False, True)
+        collision_zombies_bullet = pygame.sprite.groupcollide(zombieGroup, bulletGroup, True, False)
         if collision_zombies_bullet:
             newZombie.health -= 5
 
@@ -95,7 +95,7 @@ while True:
 
 
         #End game Cases:
-
+        aim.update()
         drawGroup.draw(tela) 
         if knight.health <= 0: #TELA DE GAME OVER
             tela.blit(texto_formatado_game_over, (200, 200))

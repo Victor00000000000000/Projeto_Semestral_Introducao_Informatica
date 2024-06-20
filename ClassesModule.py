@@ -12,26 +12,28 @@ class Aim(pygame.sprite.Sprite):
     def __init__(self, *groups):
         super().__init__(*groups)
         self.image = pygame.image.load(r"C:\Users\home\Desktop\Victor\UFSC\Projeto_Semestral_Introducao_Informatica\Data\Imagens\aim.png")
-        self.rect = pygame.Rect(11, 11, 0, 0)
+        self.rect = pygame.Rect(300, 300, 1, 1)
         self.image = pygame.transform.scale(self.image, (50, 50))
 
     def update(self, *args):
         for event in pygame.event.get():
             if event.type == MOUSEMOTION:
-                print("Mouse Moving")
+##              print("Mouse Moving")
                 mouse_coordenates = pygame.mouse.get_pos()
-                self.rect.x = mouse_coordenates[0]
-                self.rect.y = mouse_coordenates[1]
+##                self.rect.x = mouse_coordenates[0]
+##                self.rect.y = mouse_coordenates[1]
+                if event.rel[0] > 0:
+                    self.rect.x = mouse_coordenates[0]
                 
 class Zombie(pygame.sprite.Sprite):
     def __init__(self, *groups):
         super().__init__(*groups)
         self.image = pygame.image.load(r"C:\Users\home\Desktop\Victor\UFSC\Projeto_Semestral_Introducao_Informatica\Data\Imagens\zombiePixel.png")
-        self.rect = pygame.Rect(100, 100, 50, 50)
+        self.rect = pygame.Rect(100, 100, 25, 40)
         self.image = pygame.transform.scale(self.image, (50,50))
 
-        self.rect.x = r.randint(40, 600)
-        self.rect.y = r.randint(40, 440)
+        self.rect.x = r.randint(100, 400)
+        self.rect.y = r.randint(40, 300)
 
         self.health = 10
         
@@ -48,9 +50,9 @@ class Knight(pygame.sprite.Sprite):
     def __init__(self, *groups):
         super().__init__(*groups)
         self.image = pygame.image.load(r"C:\Users\home\Desktop\Victor\UFSC\Projeto_Semestral_Introducao_Informatica\Data\Imagens\knight.png")
-        self.rect = pygame.Rect(0, 0, 100, 100)
-        self.image = pygame.transform.scale(self.image, (100,100))
-
+        self.rect = pygame.Rect(300, 300, 20, 40)
+        self.image = pygame.transform.scale(self.image, (75,75))
+        self.rect.center = (self.rect.x/2, self.rect.y/2)
         self.health = 100
         
     def update(self, *arg):
