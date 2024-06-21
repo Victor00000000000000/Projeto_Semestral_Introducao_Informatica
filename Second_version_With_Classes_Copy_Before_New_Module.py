@@ -40,9 +40,6 @@ pygame.mixer.music.load(r"Data/Áudios/Cyberpunk Moonlight Sonata.mp3")
 pygame.mixer.music.play(-1)
 
 #Background's image:
-##background = pygame.image.load(r"C:\Users\home\Desktop\Victor\UFSC\Projeto_Semestral_Introducao_Informatica\Data\Imagens\Background.png")
-##background.pygame.transform.scale(tela, (640, 480))
-
 #Clock's settings:
 clock = pygame.time.Clock()
 

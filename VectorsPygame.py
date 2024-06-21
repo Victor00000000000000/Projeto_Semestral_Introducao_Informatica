@@ -19,6 +19,9 @@ while True:
 
     pygame.draw.line(tela, "red", (0, screen_center.y), (screen_dimentions.x, screen_center.y))
     pygame.draw.line(tela, "red", (screen_center.x, 0), (screen_center.x, screen_dimentions.y))
-
+    retan = pygame.Rect(0, 0, 100, 100)
+    pygame.draw.rect(tela, "blue", retan)
+    pygame.draw.rect(tela, "red", retan)
+    retan.center = (100,100)
     pygame.display.update()
     
