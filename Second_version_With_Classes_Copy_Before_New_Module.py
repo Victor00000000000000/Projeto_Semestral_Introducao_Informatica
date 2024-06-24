@@ -1,8 +1,17 @@
 import pygame
 from pygame.locals import *
 from sys import exit
-from ClassesModule import Knight, Zombie, Aim, Background, Bullet
+
+#from ClassesModule import Zombie
+from knight_module import Knight
+from zombie_module import Zombie
+from aim_module import Aim
+from bullet_module import Bullet
+from background_module import Background
+
 from random import random
+import math as m
+from pygame.math import Vector2
 
 pygame.init()
 pygame.mixer.init()
@@ -49,9 +58,9 @@ knight = Knight(drawGroup)
 zombie_borner = 0.7 #Porcentagem de chance de spawn da Zombie
 timer = 0
 aim = Aim(drawGroup)
-
+#bob = Bob(drawGroup)
 game_over = False
-
+number_zombie = -1
 while True:
     clock.tick(60) # Define a quantidade de fps (60 fps
     mensage_health_knight = f"Health: {knight.health}" # Mensagem de vida do Knight
@@ -66,15 +75,19 @@ while True:
         if event.type == MOUSEBUTTONDOWN and not game_over:
             newBullet = Bullet(drawGroup, bulletGroup)
 
-    if not game_over: #logic game execution
+        if event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                game_over = True
 
+    if not game_over: #logic game execution
         #Spawner    
         timer+=1
         if timer > 30:# Gerador de Zombie's objects a cada 30 frames e com 30% de chance de spawn
             timer = 0
             if random() > zombie_borner:
                 newZombie = Zombie(drawGroup, zombieGroup)
-
+                number_zombie += 1
+                
         #BULLET:
         
             
@@ -83,14 +96,18 @@ while True:
         if collision_knight_zombies:
             knight.health -= 5
 
-        collision_zombies_bullet = pygame.sprite.groupcollide(zombieGroup, bulletGroup, True, False)
+        collision_zombies_bullet = pygame.sprite.groupcollide(zombieGroup, bulletGroup, False, False)
         if collision_zombies_bullet:
             newZombie.health -= 5
 
+        #Animation:
+##        keys = pygame.key.get_pressed()
+##        if keys[pygame.K_a]:
+##            knight.image.transform.flip(knight.image, False, True)
+##
+##        if keys[pygame.K_d]:
+##            knight.image.transform.flip(knight.image, False, True)
             
-        
-
-
         #End game Cases:
         #aim.update()
         drawGroup.update()
