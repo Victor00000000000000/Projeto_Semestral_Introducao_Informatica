@@ -2,13 +2,7 @@ import pygame
 from pygame.locals import *
 from sys import exit
 
-#from ClassesModule import Zombie
-from knight_module import Knight
-from zombie_module import Zombie
-from aim_module import Aim
-from bullet_module import Bullet
-from background_module import Background
-
+from ClassesModule import Zombie, Knight, Zombie, Aim, Bullet, Background
 from random import random
 import math as m
 from pygame.math import Vector2
