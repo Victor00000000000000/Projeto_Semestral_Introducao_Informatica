@@ -7,8 +7,9 @@ from random import random
 import math as m
 from pygame.math import Vector2
 
-pygame.init()
+pygame.mixer.pre_init(44100, -16, 2, 2048)
 pygame.mixer.init()
+pygame.init()
 pygame.font.init()
 
 
@@ -42,6 +43,8 @@ bulletGroup = pygame.sprite.Group()
 pygame.mixer.music.load(r"Data/Áudios/Cyberpunk Moonlight Sonata.mp3")
 pygame.mixer.music.play(-1)
 
+#Bullet Sound:
+shoot_sound = pygame.mixer.Sound(r"Data\Áudios\Spells\Shoot_sound\shot converter.mp3")
 #Background's image:
 #Clock's settings:
 clock = pygame.time.Clock()
@@ -52,7 +55,6 @@ knight = Knight(drawGroup)
 zombie_borner = 0.7 #Porcentagem de chance de spawn da Zombie
 timer = 0
 aim = Aim(drawGroup)
-#bob = Bob(drawGroup)
 game_over = False
 number_zombie = -1
 while True:
@@ -83,14 +85,16 @@ while True:
                 number_zombie += 1
                 
         #BULLET:
-        
+        for event in pygame.event.get():
+            if event.type == MOUSEBUTTONDOWN:
+                shoot_sound.play(1)
             
         #Collisions:
         collision_knight_zombies = pygame.sprite.spritecollide(knight, zombieGroup, False)# COLISÃO DOS ZOMBIES COM O KNIGHT
         if collision_knight_zombies:
             knight.health -= 5
 
-        collision_zombies_bullet = pygame.sprite.groupcollide(zombieGroup, bulletGroup, False, False)
+        collision_zombies_bullet = pygame.sprite.groupcollide(zombieGroup, bulletGroup, False, True)
         if collision_zombies_bullet:
             newZombie.health -= 5
 
@@ -103,7 +107,6 @@ while True:
 ##            knight.image.transform.flip(knight.image, False, True)
             
         #End game Cases:
-        #aim.update()
         drawGroup.update()
         drawGroup.draw(tela)
 

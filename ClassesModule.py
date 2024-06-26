@@ -4,6 +4,7 @@ from pygame.locals import *
 import random as r
 from pygame.math import Vector2
 pygame.init()
+pygame.mixer.init()
 
 class Aim(pygame.sprite.Sprite):
     "Aim's programming"
@@ -16,6 +17,12 @@ class Aim(pygame.sprite.Sprite):
         self.rect.center = (150, 150)
         
     def update(self, *args):
+        
+        global aim_x, aim_y, aim_vector
+        aim_x = self.rect.x
+        aim_y = self.rect.y
+        aim_vector = self.va
+
         mouse_visility = pygame.mouse.set_visible(False)
         mouse_coordenates = pygame.mouse.get_pos()
         self.rect.x = mouse_coordenates[0] - 25
@@ -64,10 +71,12 @@ class Knight(pygame.sprite.Sprite):
 
         # Mudar para a tecla do mouse
         #shoot_sound = pygame.mixer.music.load(r"C:\Users\home\Desktop\Victor\UFSC\Projeto_Semestral_Introducao_Informatica\Data\Áudios\Spells\Shoot_sound\shot converter.mp3")
-##        for event in pygame.event.get():
-##            if event.type == MOUSEBUTTONDOWN:
-##                shoot_sound.play()
+        for event in pygame.event.get():
+            if event.type == MOUSEBUTTONDOWN:
+                pass
+                #shoot_sound.play(1)
 
+        # Animação Knight
 ##            if event.type == KEYDOWN:
 ##                if event.key == K_a:
 ##                    self.image = pygame.transform.scale(pygame.transform.flip(self.image, True, False), (75,75))
@@ -76,17 +85,17 @@ class Knight(pygame.sprite.Sprite):
 ##                    self.image = pygame.transform.scale(pygame.transform.flip(self.image, True, False), (75,75))
                     
         #Colision of a Knight on walls
-        if self.rect.top < 0:
-            self.rect.top = 0
+        if self.rect.top < 10:
+            self.rect.top = 10
 
-        if self.rect.bottom > 480:
-            self.rect.bottom = 480
+        if self.rect.bottom > 435:
+            self.rect.bottom = 435
 
-        if self.rect.right > 650:
-            self.rect.right = 650
+        if self.rect.right > 585:
+            self.rect.right = 585
 
-        if self.rect.left < 0:
-            self.rect.left = 0
+        if self.rect.left < 10:
+            self.rect.left = 10
             
 class Zombie(pygame.sprite.Sprite):
     "Zombies' programming"
@@ -98,8 +107,8 @@ class Zombie(pygame.sprite.Sprite):
         self.rect = pygame.Rect(self.vz, (40, 40))
         self.image = pygame.transform.scale(self.image, (50,50))
 
-        self.rect.x = r.randint(100, 400)
-        self.rect.y = r.randint(40, 300)
+        self.rect.x = r.randint(10, 585)
+        self.rect.y = r.randint(10, 435)
 
         
         
@@ -110,20 +119,15 @@ class Zombie(pygame.sprite.Sprite):
     
         self.health = 10
 
-
+        self.zombie_velocity = 1.5
         #Criar o código para evitar que o Zombie seja gerado em cima do Knight
 
     def update(self, *args):#Zombie's movimetion
-        #
-##        global zombie_x, zombie_y
-##        zombie_x = self.rect.x
-##        zombie_y = self.rect.y 
-##        vector_z = self.vz
-
-        #self.vz = Vector2(self.rect.x, self.rect.y)         
-
-        self.vz.move_towards_ip(vector_k, self.distance_zk)
-        print(vector_k, knight_x, knight_y )
+        if self.distance_zk != 0:
+            self.rect.x -= (self.zombie_velocity*(self.rect.x - knight_x))/self.distance_zk
+            self.rect.y -= (self.zombie_velocity*(self.rect.y - knight_y))/self.distance_zk
+        
+        
 
 class Bullet(pygame.sprite.Sprite):
     "FireBall's programming"
@@ -136,12 +140,11 @@ class Bullet(pygame.sprite.Sprite):
         self.rect = pygame.Rect(self.vb, (23, 17))
         self.image = pygame.transform.scale(self.image, (50, 50))
 
-        #self.vb = Vector2(knight.rect.x, knight.rect.y)
-        #self.distance = self.vb.distance_to(aim.va)
-        
-        
-        #self.vb.move_towards_ip(aim.va, self.distance)
-        
+    def update(self, *args):
+        global bullet_x, bullet_y, bullet_vector
+        bullet_x = self.rect.x
+        bullet_y = self.rect.y
+        bullet_vector = self.vb
         
 class Background(pygame.sprite.Sprite):
     "Scenario's programming"
