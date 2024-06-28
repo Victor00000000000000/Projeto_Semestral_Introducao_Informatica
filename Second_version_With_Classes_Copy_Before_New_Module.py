@@ -22,12 +22,14 @@ color_background = pygame.Color(0, 255, 255)
 color_ret = pygame.Color(255, 0, 0)
 color_text_end_game = pygame.Color(255, 255, 255)
 color_text_health_knight = pygame.Color(242, 41, 41)
+color_menu = pygame.Color(0, 20, 50)
+color_titulo = pygame.Color(70, 0, 0)
 
 #SysFont's settings:
 fonte = pygame.font.SysFont("arial", 12, True, False)
 fonte_end_game = pygame.font.SysFont("arial", 50, True, False)
 fonte_health_knight = pygame.font.SysFont("arial", 30, True, False)
-
+fonte_titulo = pygame.font.SysFont("arial", 70, True, False)
 #Rect's settings
 ret = pygame.Rect(50, 50, 100, 100)
 
@@ -44,7 +46,7 @@ pygame.mixer.music.load(r"Data/Áudios/Cyberpunk Moonlight Sonata.mp3")
 pygame.mixer.music.play(-1)
 
 #Bullet Sound:
-shoot_sound = pygame.mixer.Sound(r"Data\Áudios\Spells\Shoot_sound\shot converter.mp3")
+
 #Background's image:
 #Clock's settings:
 clock = pygame.time.Clock()
@@ -55,7 +57,7 @@ knight = Knight(drawGroup)
 zombie_borner = 0.7 #Porcentagem de chance de spawn da Zombie
 timer = 0
 aim = Aim(drawGroup)
-game_over = False
+game_over = True
 number_zombie = -1
 while True:
     clock.tick(60) # Define a quantidade de fps (60 fps
@@ -75,6 +77,15 @@ while True:
             if event.key == K_ESCAPE:
                 game_over = True
 
+    #MENU GAME
+    if game_over and knight.health != 0:
+        tela.fill(color_menu)
+        texto_formatado_titulo = fonte_titulo.render("\nKight\nVs\nZombies\n", True, color_titulo)
+        tela.blit(texto_formatado_titulo, (80, 100))
+    
+    
+
+    #START GAME
     if not game_over: #logic game execution
         #Spawner    
         timer+=1
@@ -83,11 +94,6 @@ while True:
             if random() > zombie_borner:
                 newZombie = Zombie(drawGroup, zombieGroup)
                 number_zombie += 1
-                
-        #BULLET:
-        for event in pygame.event.get():
-            if event.type == MOUSEBUTTONDOWN:
-                shoot_sound.play(1)
             
         #Collisions:
         collision_knight_zombies = pygame.sprite.spritecollide(knight, zombieGroup, False)# COLISÃO DOS ZOMBIES COM O KNIGHT
@@ -97,7 +103,12 @@ while True:
         collision_zombies_bullet = pygame.sprite.groupcollide(zombieGroup, bulletGroup, False, True)
         if collision_zombies_bullet:
             newZombie.health -= 5
+        #Creating Bullet:
+        for event in pygame.event.get():
+            if event.type == MOUSEBUTTONDOWN:
+                bullet = Bullet(drawGroup, bulletGroup)
 
+            
         #Animation:
 ##        keys = pygame.key.get_pressed()
 ##        if keys[pygame.K_a]:

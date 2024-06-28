@@ -5,29 +5,6 @@ import random as r
 from pygame.math import Vector2
 pygame.init()
 pygame.mixer.init()
-
-class Aim(pygame.sprite.Sprite):
-    "Aim's programming"
-    def __init__(self, *groups):
-        super().__init__(*groups)
-        self.va = Vector2(300, 300)
-        self.image = pygame.image.load(r"Data\Imagens\aim.png")
-        self.rect = pygame.Rect(self.va, (1, 1))
-        self.image = pygame.transform.scale(self.image, (50, 50))
-        self.rect.center = (150, 150)
-        
-    def update(self, *args):
-        
-        global aim_x, aim_y, aim_vector
-        aim_x = self.rect.x
-        aim_y = self.rect.y
-        aim_vector = self.va
-
-        mouse_visility = pygame.mouse.set_visible(False)
-        mouse_coordenates = pygame.mouse.get_pos()
-        self.rect.x = mouse_coordenates[0] - 25
-        self.rect.y = mouse_coordenates[1] - 25
-                
             
 class Knight(pygame.sprite.Sprite):
     "Player's programming"
@@ -48,7 +25,7 @@ class Knight(pygame.sprite.Sprite):
     def update(self, *arg):
         #Coordenadas globais do knight e atualização dos valores
         global knight_x, knight_y, vector_k
-        self.vk = Vector2(self.rect.x, self.rect.y)
+        self.vk = Vector2(x=self.rect.x, y=self.rect.y)
         vector_k = self.vk
         knight_x = self.rect.x
         knight_y = self.rect.y
@@ -68,13 +45,7 @@ class Knight(pygame.sprite.Sprite):
         
         if keys[pygame.K_s]:
             self.rect.y += 3.5
-
-        # Mudar para a tecla do mouse
-        #shoot_sound = pygame.mixer.music.load(r"C:\Users\home\Desktop\Victor\UFSC\Projeto_Semestral_Introducao_Informatica\Data\Áudios\Spells\Shoot_sound\shot converter.mp3")
-        for event in pygame.event.get():
-            if event.type == MOUSEBUTTONDOWN:
-                pass
-                #shoot_sound.play(1)
+                
 
         # Animação Knight
 ##            if event.type == KEYDOWN:
@@ -97,6 +68,27 @@ class Knight(pygame.sprite.Sprite):
         if self.rect.left < 10:
             self.rect.left = 10
             
+class Aim(pygame.sprite.Sprite):
+    "Aim's programming"
+    def __init__(self, *groups):##ERROR
+        super().__init__(*groups)
+        self.va = Vector2(300, 300)
+        self.image = pygame.image.load(r"Data\Imagens\aim.png")
+        self.rect = pygame.Rect(self.va, (0, 0))
+        self.image = pygame.transform.scale(self.image, (50, 50))
+        self.rect.center = (150, 150)
+    def update(self, *args):
+        
+        global aim_x, aim_y, aim_vector
+        aim_x = self.rect.x
+        aim_y = self.rect.y
+        aim_vector = self.va
+
+        mouse_visility = pygame.mouse.set_visible(False)
+        mouse_coordenates = pygame.mouse.get_pos()
+        self.rect.x = mouse_coordenates[0] - 25
+        self.rect.y = mouse_coordenates[1] - 25
+
 class Zombie(pygame.sprite.Sprite):
     "Zombies' programming"
     def __init__(self, *groups):
@@ -137,14 +129,25 @@ class Bullet(pygame.sprite.Sprite):
         
         self.vb = Vector2()
         self.image = pygame.image.load(r"Data\Imagens\fireball.png")
-        self.rect = pygame.Rect(self.vb, (23, 17))
+        self.rect = pygame.Rect(self.vb, (80, 80))
         self.image = pygame.transform.scale(self.image, (50, 50))
-
+        self.rect.x = knight_x
+        self.rect.y = knight_y
+        self.shoot_sound = pygame.mixer.Sound(r"Data\Áudios\Spells\Shoot_sound\shot converter.mp3")
+        self.angulo_aim_knight = m.atan2(aim_y-knight_y, aim_x-knight_x)
+        self.velocity = 1
+        
     def update(self, *args):
         global bullet_x, bullet_y, bullet_vector
         bullet_x = self.rect.x
         bullet_y = self.rect.y
         bullet_vector = self.vb
+        
+        for event in pygame.event.get():
+            if event.type == MOUSEBUTTONDOWN:
+                self.shoot_sound.play(1)
+                self.rect.x += self.velocity
+                self.rect.y += self.velocity*self.angulo_aim_knight
         
 class Background(pygame.sprite.Sprite):
     "Scenario's programming"
