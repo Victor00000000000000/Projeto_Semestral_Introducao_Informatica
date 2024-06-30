@@ -118,8 +118,9 @@ class Zombie(pygame.sprite.Sprite):
         if self.distance_zk != 0:
             self.rect.x -= (self.zombie_velocity*(self.rect.x - knight_x))/self.distance_zk
             self.rect.y -= (self.zombie_velocity*(self.rect.y - knight_y))/self.distance_zk
-        
-        
+
+        if self.health <= 0:
+            self.kill()
 
 class Bullet(pygame.sprite.Sprite):
     "FireBall's programming"
@@ -131,6 +132,8 @@ class Bullet(pygame.sprite.Sprite):
         self.image = pygame.image.load(r"Data\Imagens\fireball.png")
         self.rect = pygame.Rect(self.vb, (80, 80))
         self.image = pygame.transform.scale(self.image, (50, 50))
+
+        
         self.rect.x = knight_x
         self.rect.y = knight_y
         self.shoot_sound = pygame.mixer.Sound(r"Data\Áudios\Spells\Shoot_sound\shot converter.mp3")
@@ -138,10 +141,10 @@ class Bullet(pygame.sprite.Sprite):
         self.velocity = 1
         
     def update(self, *args):
-        global bullet_x, bullet_y, bullet_vector
-        bullet_x = self.rect.x
-        bullet_y = self.rect.y
-        bullet_vector = self.vb
+##        global bullet_x, bullet_y, bullet_vector
+##        bullet_x = self.rect.x
+##        bullet_y = self.rect.y
+##        bullet_vector = self.vb
         
         for event in pygame.event.get():
             if event.type == MOUSEBUTTONDOWN:
@@ -157,4 +160,3 @@ class Background(pygame.sprite.Sprite):
         self.image = pygame.image.load(r"Data\Imagens\Background.png")
         self.rect = pygame.Rect(self.vbg, (640, 480))
         self.image = pygame.transform.scale(self.image, (640, 480))        
-
