@@ -5,7 +5,16 @@ import random as r
 from pygame.math import Vector2
 pygame.init()
 pygame.mixer.init()
-            
+
+##global score_kill
+##score_kill = 0
+
+##global bottom_zombie, top_zombie, right_zombie, left_zombie
+##bottom_zombie = 0
+##top_zombie = 0
+##right_zombie = 0
+##left_zombie = 0
+
 class Knight(pygame.sprite.Sprite):
     "Player's programming"
     def __init__(self, *groups):
@@ -30,8 +39,26 @@ class Knight(pygame.sprite.Sprite):
         knight_x = self.rect.x
         knight_y = self.rect.y
         
+        knight_right = False
+        knight_left = True
+
+        #Animação de movimento
+        for event in pygame.event.get():
+            if event.type == KEYDOWN:
+                if event.key == K_a:
+                    if not knight_left:
+                        self.image = pygame.transform.flip(self.image, True, False)
+                        knight_left = True
+                        knight_right = False
+
+                if event.key == K_d:
+                    if not knight_right:
+                        self.image = pygame.transform.flip(self.image, True, False)
+                        knight_left = False
+                        knight_right = True
         
         #Movimentação WASD do Knight
+        
         keys = pygame.key.get_pressed()
         if keys[K_w]:
             self.rect.y -= 3.5
@@ -41,32 +68,42 @@ class Knight(pygame.sprite.Sprite):
                     
         if keys[pygame.K_d]:
             self.rect.x += 3.5
-
         
         if keys[pygame.K_s]:
             self.rect.y += 3.5
-                
 
-        # Animação Knight
-##            if event.type == KEYDOWN:
-##                if event.key == K_a:
-##                    self.image = pygame.transform.scale(pygame.transform.flip(self.image, True, False), (75,75))
-##
-##                if event.key == K_d:
-##                    self.image = pygame.transform.scale(pygame.transform.flip(self.image, True, False), (75,75))
-                    
         #Colision of a Knight on walls
         if self.rect.top < 10:
             self.rect.top = 10
+            print(self.rect.top, "top")
 
         if self.rect.bottom > 435:
             self.rect.bottom = 435
+            print(self.rect.bottom, "bottom")
 
         if self.rect.right > 585:
             self.rect.right = 585
+            print(self.rect.right, "right")
 
         if self.rect.left < 10:
             self.rect.left = 10
+            print(self.rect.left, "left")
+
+
+        #Colision with zombies
+##        if self.rect.top >= top_zombie:
+##            self.rect.y -= 10
+##
+##        if self.rect.bottom <= bottom_zombie:
+##            self.rect.y += 10
+##
+##        if self.rect.right >= right_zombie:
+##            self.rect.x -= 10
+##
+##        if self.rect.left <= left_zombie:
+##            self.rect.x += 10
+            
+            
             
 class Aim(pygame.sprite.Sprite):
     "Aim's programming"
@@ -86,8 +123,10 @@ class Aim(pygame.sprite.Sprite):
 
         mouse_visility = pygame.mouse.set_visible(False)
         mouse_coordenates = pygame.mouse.get_pos()
+        #if (aim_x-knight_x) != 0:
         self.rect.x = mouse_coordenates[0] - 25
         self.rect.y = mouse_coordenates[1] - 25
+        
 
 class Zombie(pygame.sprite.Sprite):
     "Zombies' programming"
@@ -115,12 +154,21 @@ class Zombie(pygame.sprite.Sprite):
         #Criar o código para evitar que o Zombie seja gerado em cima do Knight
 
     def update(self, *args):#Zombie's movimetion
+        global bottom_zombie, top_zombie, right_zombie, left_zombie
+        bottom_zombie = self.rect.bottom
+        top_zombie = self.rect.top
+        right_zombie = self.rect.right
+        left_zombie = self.rect.left
+        
         if self.distance_zk != 0:
             self.rect.x -= (self.zombie_velocity*(self.rect.x - knight_x))/self.distance_zk
             self.rect.y -= (self.zombie_velocity*(self.rect.y - knight_y))/self.distance_zk
 
         if self.health <= 0:
             self.kill()
+##            score_kill += 1
+##            return score_kill
+
 
 class Bullet(pygame.sprite.Sprite):
     "FireBall's programming"
@@ -129,29 +177,29 @@ class Bullet(pygame.sprite.Sprite):
         super().__init__(*groups)
         
         self.vb = Vector2()
-        self.image = pygame.image.load(r"Data\Imagens\fireball.png")
+        self.image = pygame.image.load(r"Data\Imagens\fireball.png").convert_alpha()
+        self.image = pygame.transform.rotate(self.image, m.atan2(aim_y-knight_y, aim_x-knight_x)) ##############################################ERROR DESGRAÇADO
         self.rect = pygame.Rect(self.vb, (80, 80))
         self.image = pygame.transform.scale(self.image, (50, 50))
-
+        self.shoot_sound = pygame.mixer.Sound(r"Data\Áudios\Spells\Shoot_sound\shot converter.mp3")
         
         self.rect.x = knight_x
         self.rect.y = knight_y
-        self.shoot_sound = pygame.mixer.Sound(r"Data\Áudios\Spells\Shoot_sound\shot converter.mp3")
-        self.angulo_aim_knight = m.atan2(aim_y-knight_y, aim_x-knight_x)
-        self.velocity = 1
         
-    def update(self, *args):
-##        global bullet_x, bullet_y, bullet_vector
-##        bullet_x = self.rect.x
-##        bullet_y = self.rect.y
-##        bullet_vector = self.vb
-        
+        self.tan_angulo_aim_knight = m.tan(m.atan2((knight_y - aim_y), (knight_x - aim_x)))
+
+        self.velocity = 2
+
+
         for event in pygame.event.get():
             if event.type == MOUSEBUTTONDOWN:
                 self.shoot_sound.play(1)
-                self.rect.x += self.velocity
-                self.rect.y += self.velocity*self.angulo_aim_knight
-        
+                
+    def update(self, *args):
+        print(m.atan2((knight_y - aim_y), (knight_x - aim_x)))
+        self.rect.x += self.velocity
+        self.rect.y += self.velocity*self.tan_angulo_aim_knight
+         
 class Background(pygame.sprite.Sprite):
     "Scenario's programming"
     def __init__(self, *groups):

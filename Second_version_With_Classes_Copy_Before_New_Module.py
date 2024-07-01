@@ -2,20 +2,23 @@ import pygame
 from pygame.locals import *
 from sys import exit
 
-from ClassesModule import Zombie, Knight, Zombie, Aim, Bullet, Background
+from ClassesModule import Zombie, Knight, Zombie, Aim, Bullet, Background#, score_kill
 from random import random
 import math as m
 from pygame.math import Vector2
 
 pygame.mixer.pre_init(44100, -16, 2, 2048)
 pygame.mixer.init()
+
 pygame.init()
+
 pygame.font.init()
 
 
 #Surface's settings
 tela_dimensions = (640, 480)
 tela = pygame.display.set_mode(tela_dimensions)
+pygame.display.set_caption("Knight Vs Zombies")
 
 #Color's settings
 color_background = pygame.Color(0, 255, 255)
@@ -34,22 +37,16 @@ fonte_health_knight = pygame.font.SysFont("arial", 30, True, False)
 fonte_titulo = pygame.font.SysFont("arial", 70, True, False)
 fonte_back_menu = pygame.font.SysFont("arial", 30, True, False)
 
-#Rect's settings
-ret = pygame.Rect(50, 50, 100, 100)
-
 #Group's settings
 drawGroup = pygame.sprite.Group()
 zombieGroup = pygame.sprite.Group()
 bulletGroup = pygame.sprite.Group()
-
-#Sprite's settings
                 
 #Sound's settings:
 #Background Sound:
 pygame.mixer.music.load(r"Data/Áudios/Cyberpunk Moonlight Sonata.mp3")
 pygame.mixer.music.play(-1)
 
-#Bullet Sound:
 
 #Background's image:
 #Clock's settings:
@@ -61,8 +58,9 @@ knight = Knight(drawGroup)
 aim = Aim(drawGroup)
 
 zombie_borner = 0.7 #Porcentagem de chance de spawn da Zombie
-timer = 0
+timer = 0 # Variável auxiliar para o període de geração de Zombie's objects
 
+#Variáveis booleanas auxiliares a troca de telas (menu, jogo e endgame)
 game_over = True
 music_game = True
 music_menu = True
@@ -87,16 +85,14 @@ while True:
 
 
 
-    #After empty drawGroup, bulletGroup, zombieGroup
-            
+    #Aawfter empty drawGroup, bulletGroup, zombieGroup
+    #print(list(drawGroup))       
     if len(drawGroup.sprites()) == 0: #PROBLEMAS, MUITO PROBLEMAS, A MIRA NÃO É REDESENHADA
-            drawGroup.add(aim)
             drawGroup.add(background)
             drawGroup.add(knight)
+            drawGroup.add(aim)
 
-
-
-
+    
 
 
     #MENU GAME
@@ -106,8 +102,8 @@ while True:
             pygame.mixer.music.play(-1)
             music_menu = False
         tela.fill(color_menu)
-        texto_formatado_titulo = fonte_titulo.render("\nKight\nVs\nZombies\n", True, color_titulo)
-        tela.blit(texto_formatado_titulo, ((tela_dimensions[0]/2)-256, (tela_dimensions[1]/2)-200))
+        texto_formatado_titulo = fonte_titulo.render("\nKnight\nVs\nZombies\n", True, color_titulo)
+        tela.blit(texto_formatado_titulo, ((tela_dimensions[0]/2)-270, (tela_dimensions[1]/2)-200))
         texto_formatado_play = fonte_titulo.render("START", True, color_play)
         tela.blit(texto_formatado_play,((tela_dimensions[0]/2)-90, (tela_dimensions[1]/2)))
 
@@ -133,7 +129,7 @@ while True:
 
     #START GAME
     if not game_over: #logic game execution
-
+        #print(score_kill_imported)
 
 
 
@@ -153,6 +149,8 @@ while True:
             timer = 0
             if random() > zombie_borner:
                 newZombie = Zombie(drawGroup, zombieGroup)
+                #score_kill_imported = score_kill
+
                 
             
 
@@ -183,12 +181,8 @@ while True:
 
 
         #Animation:
-##        keys = pygame.key.get_pressed()
-##        if keys[pygame.K_a]:
-##            knight.image.transform.flip(knight.image, False, True)
-##
-##        if keys[pygame.K_d]:
-##            knight.image.transform.flip(knight.image, False, True)
+ 
+        
 
             
         drawGroup.update()
