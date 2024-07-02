@@ -31,6 +31,9 @@ class Knight(pygame.sprite.Sprite):
 
         self.health = 1000
 
+        self.knight_right = False
+        self.knight_left = True
+
     def update(self, *arg):
         #Coordenadas globais do knight e atualização dos valores
         global knight_x, knight_y, vector_k
@@ -39,23 +42,21 @@ class Knight(pygame.sprite.Sprite):
         knight_x = self.rect.x
         knight_y = self.rect.y
         
-        knight_right = False
-        knight_left = True
 
         #Animação de movimento
         for event in pygame.event.get():
             if event.type == KEYDOWN:
                 if event.key == K_a:
-                    if not knight_left:
+                    if not self.knight_left:
                         self.image = pygame.transform.flip(self.image, True, False)
-                        knight_left = True
-                        knight_right = False
+                        self.knight_left = True
+                        self.knight_right = False
 
                 if event.key == K_d:
-                    if not knight_right:
+                    if not self.knight_right:
                         self.image = pygame.transform.flip(self.image, True, False)
-                        knight_left = False
-                        knight_right = True
+                        self.knight_left = False
+                        self.knight_right = True
         
         #Movimentação WASD do Knight
         
@@ -177,28 +178,39 @@ class Bullet(pygame.sprite.Sprite):
         super().__init__(*groups)
         
         self.vb = Vector2()
-        self.image = pygame.image.load(r"Data\Imagens\fireball.png").convert_alpha()
-        self.image = pygame.transform.rotate(self.image, m.atan2(aim_y-knight_y, aim_x-knight_x)) ##############################################ERROR DESGRAÇADO
+        self.image = pygame.image.load(r"Data\Imagens\fireball.png")#.convert_alpha()
         self.rect = pygame.Rect(self.vb, (80, 80))
         self.image = pygame.transform.scale(self.image, (50, 50))
         self.shoot_sound = pygame.mixer.Sound(r"Data\Áudios\Spells\Shoot_sound\shot converter.mp3")
+
+        #aim_y-knight_y, aim_x-knight_x
         
         self.rect.x = knight_x
         self.rect.y = knight_y
-        
-        self.tan_angulo_aim_knight = m.tan(m.atan2((knight_y - aim_y), (knight_x - aim_x)))
+
+
+        self.dx = (aim_x-knight_x)
+        self.dy = (aim_y-knight_y)
+
+        self.distance_ka = vector_k.distance_to(aim_vector)
+
+        self.angulo_aim_knight = m.atan2((knight_y - aim_y), (knight_x - aim_x))
 
         self.velocity = 2
 
+        self.image = pygame.transform.rotate(self.image, self.angulo_aim_knight)##############################################ERRO DESGRAÇADO
+        
+                
+    def update(self, *args):
+        #print(m.atan2((knight_y - aim_y), (knight_x - aim_x)))
+        self.rect.x += self.velocity*(self.dx/self.distance_ka) 
+        self.rect.y += self.velocity*(self.dy/self.distance_ka)
 
         for event in pygame.event.get():
             if event.type == MOUSEBUTTONDOWN:
                 self.shoot_sound.play(1)
-                
-    def update(self, *args):
-        print(m.atan2((knight_y - aim_y), (knight_x - aim_x)))
-        self.rect.x += self.velocity
-        self.rect.y += self.velocity*self.tan_angulo_aim_knight
+
+        
          
 class Background(pygame.sprite.Sprite):
     "Scenario's programming"
@@ -207,4 +219,6 @@ class Background(pygame.sprite.Sprite):
         self.vbg = Vector2(0,0)
         self.image = pygame.image.load(r"Data\Imagens\Background.png")
         self.rect = pygame.Rect(self.vbg, (640, 480))
-        self.image = pygame.transform.scale(self.image, (640, 480))        
+        self.image = pygame.transform.scale(self.image, (640, 480))    
+
+

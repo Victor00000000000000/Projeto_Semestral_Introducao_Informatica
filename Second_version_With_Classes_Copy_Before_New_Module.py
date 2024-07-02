@@ -93,7 +93,7 @@ while True:
             drawGroup.add(aim)
 
     
-
+ 
 
     #MENU GAME
     if game_over and knight.health > 0:
@@ -148,7 +148,8 @@ while True:
         if timer > 30:# Gerador de Zombie's objects a cada 30 frames e com 30% de chance de spawn
             timer = 0
             if random() > zombie_borner:
-                newZombie = Zombie(drawGroup, zombieGroup)
+                pass
+                #newZombie = Zombie(drawGroup, zombieGroup)
                 #score_kill_imported = score_kill
 
                 
