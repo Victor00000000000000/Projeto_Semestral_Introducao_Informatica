@@ -29,6 +29,7 @@ color_menu = pygame.Color(100, 100, 100)
 color_titulo = pygame.Color(70, 0, 0)
 color_play = pygame.Color(70, 0, 0)
 color_back_menu = pygame.Color(255, 255, 255)
+color_score_zombie = pygame.Color(0, 150, 0)
 
 #SysFont's settings:
 fonte = pygame.font.SysFont("arial", 12, True, False)
@@ -36,6 +37,7 @@ fonte_end_game = pygame.font.SysFont("arial", 50, True, False)
 fonte_health_knight = pygame.font.SysFont("arial", 30, True, False)
 fonte_titulo = pygame.font.SysFont("arial", 70, True, False)
 fonte_back_menu = pygame.font.SysFont("arial", 30, True, False)
+fonte_score_zombie = pygame.font.SysFont("arial", 30, True, False)
 
 #Group's settings
 drawGroup = pygame.sprite.Group()
@@ -57,13 +59,14 @@ background = Background(drawGroup)
 knight = Knight(drawGroup)
 aim = Aim(drawGroup)
 
-zombie_borner = 0.7 #Porcentagem de chance de spawn da Zombie
+zombie_borner = 0.1 #Porcentagem de chance de spawn da Zombie
 timer = 0 # Variável auxiliar para o període de geração de Zombie's objects
 
 #Variáveis booleanas auxiliares a troca de telas (menu, jogo e endgame)
 game_over = True
 music_game = True
 music_menu = True
+
 
 while True:
     clock.tick(60) # Define a quantidade de fps (60 fps
@@ -85,7 +88,7 @@ while True:
 
 
 
-    #Aawfter empty drawGroup, bulletGroup, zombieGroup
+    #After empty drawGroup, bulletGroup, zombieGroup
     #print(list(drawGroup))       
     if len(drawGroup.sprites()) == 0: #PROBLEMAS, MUITO PROBLEMAS, A MIRA NÃO É REDESENHADA
             drawGroup.add(background)
@@ -96,7 +99,9 @@ while True:
  
 
     #MENU GAME
+    
     if game_over and knight.health > 0:
+        score_zombie = 0
         if music_menu:
             pygame.mixer.music.load(r"Data\Áudios\CrystalCave.mp3")
             pygame.mixer.music.play(-1)
@@ -149,8 +154,8 @@ while True:
             timer = 0
             if random() > zombie_borner:
                 pass
-                #newZombie = Zombie(drawGroup, zombieGroup)
-                #score_kill_imported = score_kill
+                newZombie = Zombie(drawGroup, zombieGroup)
+                
 
                 
             
@@ -164,8 +169,12 @@ while True:
 
         collision_zombies_bullet = pygame.sprite.groupcollide(zombieGroup, bulletGroup, False, True)
         if collision_zombies_bullet:
-            #for zombie in zombieGroup.sprites():
-            newZombie.health -= 5# Só dimnui a vida do último gerado, consertar
+            for zombie in collision_zombies_bullet:
+                zombie.health -= 5
+                if zombie.health <= 0:
+                    zombie.kill()
+                    score_zombie += 1
+        
 
             
 
@@ -181,7 +190,6 @@ while True:
 
 
 
-        #Animation:
  
         
 
@@ -207,7 +215,10 @@ while True:
         #Status do knight:
         tela.blit(texto_formatado_health, (0, 0)) # Desenha o texto de vida do Knight
 
-
+        #Score de kill de zombies:
+        mensagem_score_zombie = f"Zombies Killed: {score_zombie}"
+        texto_formatado_score_zombie = fonte_score_zombie.render(mensagem_score_zombie, True, color_score_zombie)
+        tela.blit(texto_formatado_score_zombie, (320, 0))
 
 
 
