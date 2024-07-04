@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 from sys import exit
 
-from ClassesModule import Zombie, Knight, Zombie, Aim, Bullet, Background#, score_kill
+from ClassesModule import Zombie, Knight, Zombie, Aim, Bullet, Background
 from random import random
 import math as m
 from pygame.math import Vector2
@@ -22,7 +22,6 @@ pygame.display.set_caption("Knight Vs Zombies")
 
 #Color's settings
 color_background = pygame.Color(0, 255, 255)
-color_ret = pygame.Color(255, 0, 0)
 color_text_end_game = pygame.Color(255, 255, 255)
 color_text_health_knight = pygame.Color(242, 41, 41)
 color_menu = pygame.Color(100, 100, 100)
@@ -59,7 +58,7 @@ background = Background(drawGroup)
 knight = Knight(drawGroup)
 aim = Aim(drawGroup)
 
-zombie_borner = 0.1 #Porcentagem de chance de spawn da Zombie
+zombie_borner_probability = 0.1 #Porcentagem de chance de spawn da Zombie
 timer = 0 # Variável auxiliar para o període de geração de Zombie's objects
 
 #Variáveis booleanas auxiliares a troca de telas (menu, jogo e endgame)
@@ -69,7 +68,7 @@ music_menu = True
 
 
 while True:
-    clock.tick(60) # Define a quantidade de fps (60 fps
+    clock.tick(60) # Define a quantidade de fps (60 fps)
     mensage_health_knight = f"Health: {knight.health}" # Mensagem de vida do Knight
     texto_formatado_health = fonte_health_knight.render(mensage_health_knight, True, color_text_health_knight) #Formatação da mensagem de vida do knight
     texto_formatado_game_over = fonte_end_game.render("GAME OVER", True, color_text_end_game)
@@ -90,8 +89,8 @@ while True:
 
     #After empty drawGroup, bulletGroup, zombieGroup
     #print(list(drawGroup))       
-    if len(drawGroup.sprites()) == 0: #PROBLEMAS, MUITO PROBLEMAS, A MIRA NÃO É REDESENHADA
-            drawGroup.add(background)
+    if len(drawGroup.sprites()) == 0: 
+            drawGroup.add(background)# A ordem de redesenho importa, para que, por exemplo, o background não sobreponha a mira
             drawGroup.add(knight)
             drawGroup.add(aim)
 
@@ -120,8 +119,8 @@ while True:
         mouse_coordenates = pygame.mouse.get_pos()
         if mouse_coordenates[0] >= 230 and mouse_coordenates[1] >= 240 and mouse_coordenates[0] <= 400 and mouse_coordenates[1]<=310:
             color_play = (140, 0, 0)
-            print("Mouse dentro")
-            for event in pygame.event.get():
+            print("Mouse dentro")#É estranhamente necessário para que o botão possa ser clicado instantâneamente
+            for event in pygame.event.get():#Inicia o jogo
                 if event.type == MOUSEBUTTONDOWN:
                     #print("Mouse clicado")
                     pygame.mixer.music.stop()
@@ -135,7 +134,7 @@ while True:
     #START GAME
     if not game_over: #logic game execution
         #print(score_kill_imported)
-
+        
 
 
         #MUSIC
@@ -152,12 +151,12 @@ while True:
         timer+=1
         if timer > 30:# Gerador de Zombie's objects a cada 30 frames e com 30% de chance de spawn
             timer = 0
-            if random() > zombie_borner:
+            if random() > zombie_borner_probability:
                 pass
                 newZombie = Zombie(drawGroup, zombieGroup)
                 
 
-                
+               
             
 
 
@@ -176,31 +175,42 @@ while True:
                     score_zombie += 1
         
 
-            
 
 
 
 
+
+        
         #Creating Bullet:
         for event in pygame.event.get():
             if event.type == MOUSEBUTTONDOWN:
                 bullet = Bullet(drawGroup, bulletGroup)
 
-            
 
 
 
- 
+
+
+
+
+        
         
 
-            
-        drawGroup.update()
-        drawGroup.draw(tela)
         
+        
+        drawGroup.update()##############(;-;)
+
+        #Desenha o Grupo geral de Sprites
+        drawGroup.draw(tela)#O .draw() tem que estar antes do .blit() da health e do score_zombie, para não desenhar todos os sprites (em especial o background) sobre esses status
+
+
+
+
+
         #End game Cases:
         if knight.health <= 0: #TELA DE GAME OVER
             tela.blit(texto_formatado_game_over, (200, 200))
-            print("A vida é <= 0")
+            #print("A vida é <= 0")
             game_over = True
 
             pygame.mixer.music.stop()#GAME OVER MUSIC
@@ -208,12 +218,19 @@ while True:
             pygame.mixer.music.play()
             pygame.mouse.set_visible(True)
         
-
-
+        
+        
 
 
         #Status do knight:
         tela.blit(texto_formatado_health, (0, 0)) # Desenha o texto de vida do Knight
+
+
+
+
+        
+        
+
 
         #Score de kill de zombies:
         mensagem_score_zombie = f"Zombies Killed: {score_zombie}"
@@ -221,8 +238,9 @@ while True:
         tela.blit(texto_formatado_score_zombie, (320, 0))
 
 
+        
 
-
+        
 
 
     #BACK TO MENU
@@ -236,10 +254,10 @@ while True:
         mouse_coordenates = pygame.mouse.get_pos()
         if mouse_coordenates[0] >= 250 and mouse_coordenates[0] <= 410 and mouse_coordenates[1] >= 300 and mouse_coordenates[1] <= 330:
             color_back_menu = (200, 200, 200)
-            print("Back Menu")
+            print("Back Menu")#É estranhamente necessário para que o botão possa ser clicado instantâneamente
             for event in pygame.event.get():
                 if event.type == MOUSEBUTTONDOWN:
-                    print("Mouse clicado")
+                    #print("Mouse clicado")
                     knight.health = 1000
                     pygame.mixer.music.stop()
 
@@ -254,7 +272,7 @@ while True:
             color_back_menu = (255, 255, 255)
 
 
-
+            
 
 
 
