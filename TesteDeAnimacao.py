@@ -15,13 +15,13 @@ sprite_teste_1.image = pygame.image.load(r"Data\Imagens\knight.png")
 sprite_teste_1.rect = pygame.Rect(sprite_vector, (10, 10))
 sprite_teste_1.image = pygame.transform.scale(sprite_teste_1.image, (75, 75))
 
-
+i = 0
 sprite_vector2 = Vector2(100, 100)
 sprite_teste_2 = pygame.sprite.Sprite(drawGroup)
 sprite_teste_2.image = pygame.image.load(r"Data\Imagens\knight.png")
 sprite_teste_2.rect = pygame.Rect(sprite_vector2, (10, 10))
 sprite_teste_2.image = pygame.transform.scale(sprite_teste_2.image, (75, 75))
-sprite_teste_2.image = pygame.transform.rotate(sprite_teste_1.image, 90)
+sprite_teste_2.image = pygame.transform.rotate(sprite_teste_1.image, i)
 
 knight_left = True
 knight_right = False
@@ -43,6 +43,9 @@ while True:
                     sprite_teste_1.image = pygame.transform.flip(sprite_teste_1.image, True, False)
                     knight_left = True
                     knight_right = False
+
+    sprite_teste_2.image = pygame.transform.rotate(sprite_teste_1.image, i)
+    i+=1
 
     key = pygame.key.get_pressed()
     if key[K_a]:

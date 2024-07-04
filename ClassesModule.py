@@ -6,9 +6,6 @@ from pygame.math import Vector2
 pygame.init()
 pygame.mixer.init()
 
-##global score_kill
-##score_kill = 0
-
 ##global bottom_zombie, top_zombie, right_zombie, left_zombie
 ##bottom_zombie = 0
 ##top_zombie = 0
@@ -36,14 +33,14 @@ class Knight(pygame.sprite.Sprite):
 
     def update(self, *arg):
         #Coordenadas globais do knight e atualização dos valores
-        global knight_x, knight_y, vector_k
+        global knight_x, knight_y, vector_k #Definindo algumas variáveis globais para que possam ser acessadas por outras classes
         self.vk = Vector2(x=self.rect.x, y=self.rect.y)
         vector_k = self.vk
         knight_x = self.rect.x
         knight_y = self.rect.y
         
 
-        #Animação de movimento
+        #Animação de movimento (Esquerda e Direita)
         for event in pygame.event.get():
             if event.type == KEYDOWN:
                 if event.key == K_a:
@@ -105,10 +102,9 @@ class Knight(pygame.sprite.Sprite):
 ##            self.rect.x += 10
             
             
-            
 class Aim(pygame.sprite.Sprite):
     "Aim's programming"
-    def __init__(self, *groups):##ERROR
+    def __init__(self, *groups):
         super().__init__(*groups)
         self.va = Vector2(300, 300)
         self.image = pygame.image.load(r"Data\Imagens\aim.png")
@@ -117,15 +113,15 @@ class Aim(pygame.sprite.Sprite):
         self.rect.center = (150, 150)
     def update(self, *args):
         
-        global aim_x, aim_y, aim_vector
+        global aim_x, aim_y, aim_vector #Definindo algumas variáveis globais para que possam ser acessadas por outras classes
         aim_x = self.rect.x
         aim_y = self.rect.y
         aim_vector = self.va
 
         mouse_visility = pygame.mouse.set_visible(False)
         mouse_coordenates = pygame.mouse.get_pos()
-        #if (aim_x-knight_x) != 0:
-        self.rect.x = mouse_coordenates[0] - 25
+
+        self.rect.x = mouse_coordenates[0] - 25 #Posiciona o sprite da aim no cursor e atualiza a posição
         self.rect.y = mouse_coordenates[1] - 25
         
 
@@ -139,15 +135,13 @@ class Zombie(pygame.sprite.Sprite):
         self.rect = pygame.Rect(self.vz, (40, 40))
         self.image = pygame.transform.scale(self.image, (50,50))
 
-        self.rect.x = r.randint(10, 585)
+        self.rect.x = r.randint(10, 585)#Gera uma posição de spawn aleatória para o objeto newZombie
         self.rect.y = r.randint(10, 435)
+        
+        self.vz = Vector2(self.rect.x, self.rect.y) #Define um vetor posição para o newZombie
 
         
-        
-        self.vz = Vector2(self.rect.x, self.rect.y)
-
-        
-        self.distance_zk = self.vz.distance_to(vector_k)
+        self.distance_zk = self.vz.distance_to(vector_k)#Calcula a distância entre o vetor posição do newZombie e do knight
     
         self.health = 10
 
@@ -155,7 +149,7 @@ class Zombie(pygame.sprite.Sprite):
         #Criar o código para evitar que o Zombie seja gerado em cima do Knight
 
     def update(self, *args):#Zombie's movimetion
-        global bottom_zombie, top_zombie, right_zombie, left_zombie
+        global bottom_zombie, top_zombie, right_zombie, left_zombie #Definindo algumas variáveis globais para que possam ser acessadas por outras classes
         bottom_zombie = self.rect.bottom
         top_zombie = self.rect.top
         right_zombie = self.rect.right
@@ -165,10 +159,7 @@ class Zombie(pygame.sprite.Sprite):
             self.rect.x -= (self.zombie_velocity*(self.rect.x - knight_x))/self.distance_zk
             self.rect.y -= (self.zombie_velocity*(self.rect.y - knight_y))/self.distance_zk
 
-        if self.health <= 0:
-            self.kill()
-##            score_kill += 1
-##            return score_kill
+
 
 
 class Bullet(pygame.sprite.Sprite):
@@ -185,19 +176,20 @@ class Bullet(pygame.sprite.Sprite):
 
         #aim_y-knight_y, aim_x-knight_x
         
-        self.rect.x = knight_x
+        self.rect.x = knight_x #Para gerar a posição inicial da Bullet na mesma coordenada do knight
         self.rect.y = knight_y
 
 
-        self.dx = (aim_x-knight_x)
+        self.dx = (aim_x-knight_x)#Verificando as diferenças das distâncias entre a aim e o knight em x e y
         self.dy = (aim_y-knight_y)
 
         self.distance_ka = vector_k.distance_to(aim_vector)
 
-        self.angulo_aim_knight = m.atan2((knight_y - aim_y), (knight_x - aim_x))
+        self.angulo_aim_knight = m.atan2(aim_x-knight_x, aim_y-knight_y)
 
         self.velocity = 2
 
+        #Defini o ângulo da imagem ao gerar o objeto
         self.image = pygame.transform.rotate(self.image, self.angulo_aim_knight)##############################################ERRO DESGRAÇADO
         
                 

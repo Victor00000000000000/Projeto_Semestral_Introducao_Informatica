@@ -22,6 +22,7 @@ pygame.display.set_caption("Knight Vs Zombies")
 
 #Color's settings
 color_background = pygame.Color(0, 255, 255)
+#color_ret = pygame.Color(255, 0, 0)
 color_text_end_game = pygame.Color(255, 255, 255)
 color_text_health_knight = pygame.Color(242, 41, 41)
 color_menu = pygame.Color(100, 100, 100)
